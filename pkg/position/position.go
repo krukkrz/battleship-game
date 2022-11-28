@@ -1,8 +1,8 @@
 package position
 
 type Position struct {
-	coordinates string
-	wasShot     bool
+	Coordinates string
+	WasShot     bool
 }
 
 func New(coordinates string) *Position {
@@ -10,9 +10,9 @@ func New(coordinates string) *Position {
 }
 
 func (p *Position) Shoot() bool {
-	if !p.wasShot {
-		p.wasShot = true
+	if !p.WasShot {
+		p.WasShot = true
 		return false
 	}
-	return p.wasShot
+	return p.WasShot
 }
