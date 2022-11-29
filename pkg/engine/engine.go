@@ -9,7 +9,7 @@ import (
 var instance *BattleShipGameEngine
 
 type BattleShipGameEngine struct {
-	b       board.Board
+	b       board.Board //TODO think of a better naming
 	games   []*game.Game
 	winners []Winner
 }

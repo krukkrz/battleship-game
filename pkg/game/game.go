@@ -5,7 +5,7 @@ import (
 )
 
 type Game struct {
-	B        *board.Board
+	B        *board.Board //TODO think of a better naming
 	Player   string
 	finished bool
 }
