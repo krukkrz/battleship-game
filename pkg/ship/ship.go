@@ -6,14 +6,16 @@ import (
 
 type Ship struct {
 	positions []*position.Position
-	sunk      bool
+	Sunk      bool
 }
 
 func New(positions []*position.Position) *Ship {
+	// TODO change this constructor to accept coordinates ...string
 	return &Ship{positions, false}
 }
 
 func (s *Ship) Shoot(cooardinates string) (bool, bool) {
+	// TODO Ship nie powinien mieć funkcji Shoot - co powinien mieć w zamian?
 	var wasHit bool
 	for _, p := range s.positions {
 		if p.Coordinates == cooardinates {
@@ -22,9 +24,9 @@ func (s *Ship) Shoot(cooardinates string) (bool, bool) {
 		}
 	}
 	if allPositionsAreHit(s) {
-		s.sunk = true
+		s.Sunk = true
 	}
-	return wasHit, s.sunk
+	return wasHit, s.Sunk
 }
 
 func allPositionsAreHit(s *Ship) bool {
