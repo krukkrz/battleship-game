@@ -5,21 +5,22 @@ import (
 )
 
 type Game struct {
-	b        *board.Board
-	player   string
+	B        *board.Board
+	Player   string
 	finished bool
 }
 
 func New(player string, b *board.Board) *Game {
 	return &Game{
-		b:        b,
-		player:   player,
+		B:        b,
+		Player:   player,
 		finished: false,
 	}
 }
 
+// Shoot returns isHit and finished as a result of given shot
 func (g *Game) Shoot(coordinates string) (bool, bool) {
-	isHit, allShipsSunk := g.b.Shoot(coordinates)
+	isHit, allShipsSunk := g.B.Shoot(coordinates)
 	if allShipsSunk {
 		g.finished = true
 	}
