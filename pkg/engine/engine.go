@@ -34,17 +34,21 @@ func (b *BattleShipGameEngine) Shoot(player, coordinates string) bool {
 	g := b.getGameFor(player)
 	isHit, finished := g.Shoot(coordinates)
 	if finished {
-		w := Winner{player, g.B.Shots}
-		b.winners = append(b.winners, w)
-		sort.SliceStable(b.winners, func(i, j int) bool {
-			return b.winners[i].Shots > b.winners[j].Shots
-		})
+		b.addWinner(g)
 	}
 	return isHit
 }
 
 func (b *BattleShipGameEngine) TopTen() []Winner {
 	return b.winners[:10]
+}
+
+func (b *BattleShipGameEngine) addWinner(g *game.Game) {
+	w := Winner{g.Player, g.B.Shots}
+	b.winners = append(b.winners, w)
+	sort.SliceStable(b.winners, func(i, j int) bool {
+		return b.winners[i].Shots > b.winners[j].Shots
+	})
 }
 
 func (b *BattleShipGameEngine) getGameFor(player string) *game.Game {

@@ -20,8 +20,8 @@ func (b *Board) Shoot(cooardinates string) (bool, bool) {
 	b.Shots++
 	isHit := false
 	for _, s := range b.ships {
-		ih, _ := s.Shoot(cooardinates)
-		if ih {
+		if _, ok := s.Positions[cooardinates]; ok {
+			s.MarkHit(cooardinates)
 			isHit = true
 			break
 		}

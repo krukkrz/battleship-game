@@ -1,15 +1,13 @@
 package ship_test
 
 import (
-	"battleship/pkg/common/test"
 	"battleship/pkg/ship"
 	"testing"
 )
 
 type shot struct {
-	coordinates   string
-	expectedIsHit bool
-	expectedSunk  bool
+	coordinates  string
+	expectedSunk bool
 }
 
 func TestShip_Shoot(t *testing.T) {
@@ -18,33 +16,29 @@ func TestShip_Shoot(t *testing.T) {
 		shots []shot
 	}{
 		{"all shots are successfull", []shot{
-			{"A1", true, false},
-			{"A2", true, false},
-			{"A3", true, true},
+			{"A1", false},
+			{"A2", false},
+			{"A3", true},
 		}},
 
 		{"fourth successfull shot returns same values", []shot{
-			{"A1", true, false},
-			{"A2", true, false},
-			{"A3", true, true},
-			{"A3", true, true},
+			{"A1", false},
+			{"A2", false},
+			{"A3", true},
+			{"A3", true},
 		}},
 
 		{"missed shot returns false in isHit", []shot{
-			{"B1", false, false},
+			{"B1", false},
 		}},
 	}
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			ps := test.BuildPositions("A1", "A2", "A3")
-			s := ship.New(ps)
+			s := ship.New("A1", "A2", "A3")
 
 			for _, shot := range tc.shots {
-				isHit, sunk := s.Shoot(shot.coordinates)
-				if isHit != shot.expectedIsHit {
-					t.Errorf("expected isHit: %v, got: %v", shot.expectedIsHit, isHit)
-				}
+				sunk := s.MarkHit(shot.coordinates)
 
 				if sunk != shot.expectedSunk {
 					t.Errorf("expected sunk: %v, got: %v for shot: %s", shot.expectedSunk, sunk, shot.coordinates)

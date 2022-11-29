@@ -1,37 +1,29 @@
 package ship
 
-import (
-	"battleship/pkg/position"
-)
-
 type Ship struct {
-	positions []*position.Position
+	Positions map[string]bool
 	Sunk      bool
 }
 
-func New(positions []*position.Position) *Ship {
-	// TODO change this constructor to accept coordinates ...string
+func New(coordinates ...string) *Ship {
+	positions := make(map[string]bool)
+	for _, c := range coordinates {
+		positions[c] = false
+	}
 	return &Ship{positions, false}
 }
 
-func (s *Ship) Shoot(cooardinates string) (bool, bool) {
-	// TODO Ship nie powinien mieć funkcji Shoot - co powinien mieć w zamian? "markHit"?
-	var wasHit bool
-	for _, p := range s.positions {
-		if p.Coordinates == cooardinates {
-			p.Shoot()
-			wasHit = true
-		}
-	}
-	if allPositionsAreHit(s) {
+func (s *Ship) MarkHit(cooardinates string) bool {
+	s.Positions[cooardinates] = true
+	if areAllPositionsHit(s) {
 		s.Sunk = true
 	}
-	return wasHit, s.Sunk
+	return s.Sunk
 }
 
-func allPositionsAreHit(s *Ship) bool {
-	for _, p := range s.positions {
-		if !p.WasShot {
+func areAllPositionsHit(s *Ship) bool {
+	for _, p := range s.Positions {
+		if !p {
 			return false
 		}
 	}
