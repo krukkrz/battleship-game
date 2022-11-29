@@ -1,15 +1,16 @@
 package engine
 
 import (
-	"battleship/pkg/board"
+	"battleship/pkg/common/test"
 	"battleship/pkg/game"
-	"battleship/pkg/position"
-	"battleship/pkg/ship"
 	"testing"
 )
 
+//TODO make concurrent tests of using BattleShipGameEngine
+// TODO think of if that should be a black box test
+
 func TestBattleShipGameEngine_New(t *testing.T) {
-	b := buildBoard()
+	b := test.BuildBoard()
 	e1 := New(b)
 	e2 := New(b)
 	if e1 != e2 {
@@ -17,10 +18,8 @@ func TestBattleShipGameEngine_New(t *testing.T) {
 	}
 }
 
-// do concurrent tests of using BattleShipGameEngine
-
 func TestBattleShipGameEngine_Shoot_creates_new_game_for_given_player(t *testing.T) {
-	b := buildBoard()
+	b := test.BuildBoard()
 	e := New(b)
 
 	e.Shoot("mark", "A1")
@@ -33,7 +32,7 @@ func TestBattleShipGameEngine_Shoot_creates_new_game_for_given_player(t *testing
 }
 
 func TestBattleShipGameEngine_Shoot_adds_shot_for_given_player(t *testing.T) {
-	b := buildBoard()
+	b := test.BuildBoard()
 	e := New(b)
 
 	e.Shoot("mark", "A1")
@@ -58,7 +57,7 @@ func TestBattleShipGameEngine_Shoot_adds_shot_for_given_player(t *testing.T) {
 }
 
 func TestBattleShipGameEngine_Shoot_adds_players_to_winners_when_finished(t *testing.T) {
-	b := buildBoard()
+	b := test.BuildBoard()
 	e := New(b)
 
 	e.Shoot("mark", "A1")
@@ -76,7 +75,7 @@ func TestBattleShipGameEngine_Shoot_adds_players_to_winners_when_finished(t *tes
 }
 
 func TestBattleShipGameEngine_TopTen(t *testing.T) {
-	b := buildBoard()
+	b := test.BuildBoard()
 	e := New(b)
 
 	buildElevenPlayers(e)
@@ -95,6 +94,8 @@ func TestBattleShipGameEngine_TopTen(t *testing.T) {
 			t.Errorf("%s has more votes than %s but it should not - sorting is not done well", w.Name, ws[i-1].Name)
 		}
 	}
+
+	cleanup()
 }
 
 func buildElevenPlayers(e *BattleShipGameEngine) {
@@ -228,31 +229,6 @@ func buildElevenPlayers(e *BattleShipGameEngine) {
 	e.Shoot(edi, "A3")
 	e.Shoot(edi, "B1")
 	e.Shoot(edi, "B2")
-}
-
-// TODO move those builders to common/test
-func buildBoard() board.Board {
-	sps := buildShips()
-	return *board.New(sps)
-}
-
-func buildShips() []*ship.Ship {
-	return []*ship.Ship{
-		buildShip("A1", "A2", "A3"),
-		buildShip("B1", "B2"),
-	}
-}
-
-func buildShip(coordinates ...string) *ship.Ship {
-	return ship.New(buildPositions(coordinates...))
-}
-
-func buildPositions(coordinates ...string) []*position.Position {
-	var p []*position.Position
-	for _, c := range coordinates {
-		p = append(p, position.New(c))
-	}
-	return p
 }
 
 func getGameFor(games []*game.Game, player string) *game.Game {

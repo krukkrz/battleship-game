@@ -2,8 +2,7 @@ package board_test
 
 import (
 	"battleship/pkg/board"
-	"battleship/pkg/position"
-	"battleship/pkg/ship"
+	"battleship/pkg/common/test"
 	"testing"
 )
 
@@ -38,7 +37,7 @@ func TestBoard_Shoot(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			sps := buildShips()
+			sps := test.BuildShips()
 			b := board.New(sps)
 			for _, s := range tc.shots {
 				isHit, allShipsSunk := b.Shoot(s.coordinates)
@@ -56,23 +55,4 @@ func TestBoard_Shoot(t *testing.T) {
 			}
 		})
 	}
-}
-
-func buildShips() []*ship.Ship {
-	return []*ship.Ship{
-		buildShip("A1", "A2", "A3"),
-		buildShip("B1", "B2"),
-	}
-}
-
-func buildShip(coordinates ...string) *ship.Ship {
-	return ship.New(buildPositions(coordinates...))
-}
-
-func buildPositions(coordinates ...string) []*position.Position {
-	var p []*position.Position
-	for _, c := range coordinates {
-		p = append(p, position.New(c))
-	}
-	return p
 }

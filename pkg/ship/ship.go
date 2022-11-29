@@ -15,7 +15,7 @@ func New(positions []*position.Position) *Ship {
 }
 
 func (s *Ship) Shoot(cooardinates string) (bool, bool) {
-	// TODO Ship nie powinien mieć funkcji Shoot - co powinien mieć w zamian?
+	// TODO Ship nie powinien mieć funkcji Shoot - co powinien mieć w zamian? "markHit"?
 	var wasHit bool
 	for _, p := range s.positions {
 		if p.Coordinates == cooardinates {

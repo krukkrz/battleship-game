@@ -1,7 +1,7 @@
 package ship_test
 
 import (
-	"battleship/pkg/position"
+	"battleship/pkg/common/test"
 	"battleship/pkg/ship"
 	"testing"
 )
@@ -37,7 +37,7 @@ func TestShip_Shoot(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			ps := buildNewPositions()
+			ps := test.BuildPositions("A1", "A2", "A3")
 			s := ship.New(ps)
 
 			for _, shot := range tc.shots {
@@ -51,13 +51,5 @@ func TestShip_Shoot(t *testing.T) {
 				}
 			}
 		})
-	}
-}
-
-func buildNewPositions() []*position.Position {
-	return []*position.Position{
-		position.New("A1"),
-		position.New("A2"),
-		position.New("A3"),
 	}
 }

@@ -1,10 +1,8 @@
 package game_test
 
 import (
-	"battleship/pkg/board"
+	"battleship/pkg/common/test"
 	"battleship/pkg/game"
-	"battleship/pkg/position"
-	"battleship/pkg/ship"
 	"testing"
 )
 
@@ -38,8 +36,8 @@ func TestGame_Shoot(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			b := buildBoard()
-			g := game.New("mark", b)
+			b := test.BuildBoard()
+			g := game.New("mark", &b)
 
 			for _, s := range tc.shots {
 				isHit, finished := g.Shoot(s.coordinates)
@@ -53,28 +51,4 @@ func TestGame_Shoot(t *testing.T) {
 			}
 		})
 	}
-}
-
-func buildBoard() *board.Board {
-	sps := buildShips()
-	return board.New(sps)
-}
-
-func buildShips() []*ship.Ship {
-	return []*ship.Ship{
-		buildShip("A1", "A2", "A3"),
-		buildShip("B1", "B2"),
-	}
-}
-
-func buildShip(coordinates ...string) *ship.Ship {
-	return ship.New(buildPositions(coordinates...))
-}
-
-func buildPositions(coordinates ...string) []*position.Position {
-	var p []*position.Position
-	for _, c := range coordinates {
-		p = append(p, position.New(c))
-	}
-	return p
 }
