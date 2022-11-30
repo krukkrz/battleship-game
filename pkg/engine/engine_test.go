@@ -44,13 +44,13 @@ func TestBattleShipGameEngine_Shoot_adds_shot_for_given_player(t *testing.T) {
 	}
 
 	ediGame := getGameFor(e.games, "edi")
-	if ediGame.B.Shots != 2 {
-		t.Errorf("expected two shots for edi, got: %d", ediGame.B.Shots)
+	if ediGame.Board.Shots != 2 {
+		t.Errorf("expected two shots for edi, got: %d", ediGame.Board.Shots)
 	}
 
 	markGame := getGameFor(e.games, "mark")
-	if markGame.B.Shots != 1 {
-		t.Errorf("expected one shot for mark, got: %d", markGame.B.Shots)
+	if markGame.Board.Shots != 1 {
+		t.Errorf("expected one shot for mark, got: %d", markGame.Board.Shots)
 	}
 
 	cleanup()
