@@ -37,16 +37,16 @@ func New(coordinates [][]string) *BattleShipGameEngine {
 	return instance
 }
 
-func (ge *BattleShipGameEngine) Shoot(player, coordinates string) (bool, error) {
+func (ge *BattleShipGameEngine) Shoot(player, coordinates string) (bool, bool, error) {
 	g := ge.getGameFor(player)
 	if g.Finished {
-		return false, fmt.Errorf("game is already finished")
+		return false, true, fmt.Errorf("game is already finished")
 	}
 	isHit, finished := g.Shoot(coordinates)
 	if finished {
 		ge.addWinner(player, g)
 	}
-	return isHit, nil
+	return isHit, g.Finished, nil
 }
 
 func (ge *BattleShipGameEngine) TopTen() []Winner {

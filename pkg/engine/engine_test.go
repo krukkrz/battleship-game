@@ -139,7 +139,7 @@ func TestBattleShipGameEngine_Shoot_returns_errror_if_game_is_finished(t *testin
 	e.Shoot(edi, "B1")
 	e.Shoot(edi, "B2")
 
-	_, err := e.Shoot(edi, "C2")
+	_, _, err := e.Shoot(edi, "C2")
 
 	if err == nil {
 		t.Errorf("expected error, but got nil")
