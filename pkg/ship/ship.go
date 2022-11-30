@@ -1,5 +1,9 @@
 package ship
 
+import (
+	"strings"
+)
+
 type Ship struct {
 	Positions map[string]bool
 	Sunk      bool
@@ -8,7 +12,8 @@ type Ship struct {
 func New(coordinates ...string) *Ship {
 	positions := make(map[string]bool)
 	for _, c := range coordinates {
-		positions[c] = false
+		nc := strings.TrimSpace(c)
+		positions[nc] = false
 	}
 	return &Ship{positions, false}
 }
