@@ -2,18 +2,16 @@ package engine
 
 import (
 	"battleship/pkg/common/test"
-	"battleship/pkg/game"
 	"fmt"
 	"sync"
 	"testing"
 )
 
-//TODO make concurrent tests of using BattleShipGameEngine
-
+// TODO make concurrent tests of using BattleShipGameEngine
 func TestBattleShipGameEngine_Shoot_concurrent(t *testing.T) {
 	b := test.BuildBoard()
 	e := New(b)
-	n := 10
+	n := 2
 	wg := &sync.WaitGroup{}
 	for i := 0; i < n; i++ {
 		wg.Add(1)
@@ -26,7 +24,7 @@ func TestBattleShipGameEngine_Shoot_concurrent(t *testing.T) {
 			e.Shoot(player, "B1")
 			e.Shoot(player, "B2")
 
-			g := getGameFor(e.games, player)
+			g := e.games[player]
 			if g.Shots != 5 {
 				t.Errorf("expected five shots for %s, got: %d", player, g.Shots)
 			}
@@ -55,6 +53,7 @@ func TestBattleShipGameEngine_New(t *testing.T) {
 	if e1 != e2 {
 		t.Error("BattleShipGameEngine should be singleton but is not")
 	}
+	cleanup()
 }
 
 func TestBattleShipGameEngine_Shoot_creates_new_game_for_given_player(t *testing.T) {
@@ -82,12 +81,12 @@ func TestBattleShipGameEngine_Shoot_adds_shot_for_given_player(t *testing.T) {
 		t.Errorf("should have two games, but had %d games", len(e.games))
 	}
 
-	ediGame := getGameFor(e.games, "edi")
+	ediGame := e.games["edi"]
 	if ediGame.Shots != 2 {
 		t.Errorf("expected two shots for edi, got: %d", ediGame.Shots)
 	}
 
-	markGame := getGameFor(e.games, "mark")
+	markGame := e.games["mark"]
 	if markGame.Shots != 1 {
 		t.Errorf("expected one shot for mark, got: %d", markGame.Shots)
 	}
@@ -135,6 +134,24 @@ func TestBattleShipGameEngine_TopTen(t *testing.T) {
 	}
 
 	cleanup()
+}
+
+func TestBattleShipGameEngine_Shoot_returns_errror_if_game_is_finished(t *testing.T) {
+	b := test.BuildBoard()
+	e := New(b)
+
+	edi := "edi"
+	e.Shoot(edi, "A1")
+	e.Shoot(edi, "A2")
+	e.Shoot(edi, "A3")
+	e.Shoot(edi, "B1")
+	e.Shoot(edi, "B2")
+
+	_, err := e.Shoot(edi, "C2")
+
+	if err == nil {
+		t.Errorf("expected error, but got nil")
+	}
 }
 
 func buildElevenPlayers(e *BattleShipGameEngine) {
@@ -268,16 +285,6 @@ func buildElevenPlayers(e *BattleShipGameEngine) {
 	e.Shoot(edi, "A3")
 	e.Shoot(edi, "B1")
 	e.Shoot(edi, "B2")
-}
-
-func getGameFor(games []*game.Game, player string) *game.Game {
-	var g *game.Game
-	for _, cg := range games {
-		if cg.Player == player {
-			g = cg
-		}
-	}
-	return g
 }
 
 func cleanup() {

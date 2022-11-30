@@ -7,8 +7,8 @@ import (
 type Game struct {
 	Board    *board.Board
 	Shots    int
-	Player   string
-	finished bool
+	Player   string //TODO remove this one
+	Finished bool
 }
 
 func New(player string, b *board.Board) *Game {
@@ -16,7 +16,7 @@ func New(player string, b *board.Board) *Game {
 		Board:    b,
 		Shots:    0,
 		Player:   player,
-		finished: false,
+		Finished: false,
 	}
 }
 
@@ -24,7 +24,7 @@ func (g *Game) Shoot(coordinates string) (bool, bool) {
 	g.Shots++
 	isHit, allShipsSunk := g.Board.Shoot(coordinates)
 	if allShipsSunk {
-		g.finished = true
+		g.Finished = true
 	}
-	return isHit, g.finished
+	return isHit, g.Finished
 }

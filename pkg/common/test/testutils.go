@@ -5,9 +5,9 @@ import (
 	"battleship/pkg/ship"
 )
 
-func BuildBoard() board.Board {
+func BuildBoard() *board.Board {
 	sps := BuildShips()
-	return *board.New(sps)
+	return board.New(sps)
 }
 
 func BuildShips() []*ship.Ship {
