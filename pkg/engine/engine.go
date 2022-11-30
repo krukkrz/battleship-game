@@ -3,6 +3,7 @@ package engine
 import (
 	"battleship/pkg/board"
 	"battleship/pkg/game"
+	"battleship/pkg/ship"
 	"fmt"
 	"sort"
 	"sync"
@@ -11,11 +12,11 @@ import (
 var instance *BattleShipGameEngine
 
 type BattleShipGameEngine struct {
-	boardTemplate *board.Board //TODO tego pola nie powinno być, zamiast tego powinny być coordinates
-	games         map[string]*game.Game
-	gamesMutex    *sync.Mutex
-	winners       []Winner
-	winMutex      *sync.RWMutex
+	coordinates [][]string
+	games       map[string]*game.Game
+	gamesMutex  *sync.Mutex
+	winners     []Winner
+	winMutex    *sync.RWMutex
 }
 
 type Winner struct {
@@ -23,15 +24,14 @@ type Winner struct {
 	Shots int
 }
 
-func New(b *board.Board) *BattleShipGameEngine {
-	// TODO do konstrucktora powinienem przekazywać coordinates
+func New(coordinates [][]string) *BattleShipGameEngine {
 	if instance == nil {
 		instance = &BattleShipGameEngine{
-			boardTemplate: b,
-			games:         map[string]*game.Game{},
-			gamesMutex:    &sync.Mutex{},
-			winners:       []Winner{},
-			winMutex:      &sync.RWMutex{},
+			coordinates: coordinates,
+			games:       map[string]*game.Game{},
+			gamesMutex:  &sync.Mutex{},
+			winners:     []Winner{},
+			winMutex:    &sync.RWMutex{},
 		}
 	}
 	return instance
@@ -69,10 +69,14 @@ func (ge *BattleShipGameEngine) getGameFor(player string) *game.Game {
 	ge.gamesMutex.Lock()
 	defer ge.gamesMutex.Unlock()
 	if _, ok := ge.games[player]; !ok {
-		nb := board.Copy(ge.boardTemplate) //TODO tutaj powinienem zrobić nową instancję Board na podstawie koordynatów
-		fmt.Printf("nb: %v\n", nb)
-		fmt.Printf("ge.boardTemplate: %v\n", &ge.boardTemplate)
-		ge.games[player] = game.New(player, nb)
+
+		var ships []*ship.Ship
+		for _, c := range ge.coordinates {
+			ships = append(ships, ship.New(c...))
+		}
+
+		nb := board.New(ships)
+		ge.games[player] = game.New(nb)
 	}
 	return ge.games[player]
 }

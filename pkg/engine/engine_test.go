@@ -7,10 +7,8 @@ import (
 	"testing"
 )
 
-// TODO make concurrent tests of using BattleShipGameEngine
 func TestBattleShipGameEngine_Shoot_concurrent(t *testing.T) {
-	b := test.BuildBoard()
-	e := New(b)
+	e := New(test.Coordinates)
 	n := 2
 	wg := &sync.WaitGroup{}
 	for i := 0; i < n; i++ {
@@ -47,9 +45,8 @@ func TestBattleShipGameEngine_Shoot_concurrent(t *testing.T) {
 }
 
 func TestBattleShipGameEngine_New(t *testing.T) {
-	b := test.BuildBoard()
-	e1 := New(b)
-	e2 := New(b)
+	e1 := New(test.Coordinates)
+	e2 := New(test.Coordinates)
 	if e1 != e2 {
 		t.Error("BattleShipGameEngine should be singleton but is not")
 	}
@@ -57,8 +54,7 @@ func TestBattleShipGameEngine_New(t *testing.T) {
 }
 
 func TestBattleShipGameEngine_Shoot_creates_new_game_for_given_player(t *testing.T) {
-	b := test.BuildBoard()
-	e := New(b)
+	e := New(test.Coordinates)
 
 	e.Shoot("mark", "A1")
 
@@ -70,8 +66,7 @@ func TestBattleShipGameEngine_Shoot_creates_new_game_for_given_player(t *testing
 }
 
 func TestBattleShipGameEngine_Shoot_adds_shot_for_given_player(t *testing.T) {
-	b := test.BuildBoard()
-	e := New(b)
+	e := New(test.Coordinates)
 
 	e.Shoot("mark", "A1")
 	e.Shoot("edi", "A1")
@@ -95,8 +90,7 @@ func TestBattleShipGameEngine_Shoot_adds_shot_for_given_player(t *testing.T) {
 }
 
 func TestBattleShipGameEngine_Shoot_adds_players_to_winners_when_finished(t *testing.T) {
-	b := test.BuildBoard()
-	e := New(b)
+	e := New(test.Coordinates)
 
 	e.Shoot("mark", "A1")
 	e.Shoot("edi", "A1")
@@ -113,8 +107,7 @@ func TestBattleShipGameEngine_Shoot_adds_players_to_winners_when_finished(t *tes
 }
 
 func TestBattleShipGameEngine_TopTen(t *testing.T) {
-	b := test.BuildBoard()
-	e := New(b)
+	e := New(test.Coordinates)
 
 	buildElevenPlayers(e)
 
@@ -137,8 +130,7 @@ func TestBattleShipGameEngine_TopTen(t *testing.T) {
 }
 
 func TestBattleShipGameEngine_Shoot_returns_errror_if_game_is_finished(t *testing.T) {
-	b := test.BuildBoard()
-	e := New(b)
+	e := New(test.Coordinates)
 
 	edi := "edi"
 	e.Shoot(edi, "A1")

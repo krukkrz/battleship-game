@@ -38,7 +38,7 @@ func TestGame_Shoot(t *testing.T) {
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
 			b := test.BuildBoard()
-			g := game.New("mark", &b)
+			g := game.New(b)
 
 			for _, s := range tc.shots {
 				isHit, finished := g.Shoot(s.coordinates)

@@ -5,6 +5,11 @@ import (
 	"battleship/pkg/ship"
 )
 
+var Coordinates = [][]string{
+	[]string{"A1", "A2", "A3"},
+	[]string{"B1", "B2"},
+}
+
 func BuildBoard() *board.Board {
 	sps := BuildShips()
 	return board.New(sps)

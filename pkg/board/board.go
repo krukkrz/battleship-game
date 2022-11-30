@@ -7,18 +7,6 @@ type Board struct {
 	allShipsSunk bool
 }
 
-// TODO wyjeb
-func Copy(b *Board) *Board {
-	var sc []*ship.Ship
-	for _, s := range b.ships {
-		sc = append(sc, ship.Copy(s))
-	}
-	return &Board{
-		ships:        sc,
-		allShipsSunk: b.allShipsSunk,
-	}
-}
-
 func New(ships []*ship.Ship) *Board {
 	return &Board{
 		ships:        ships,

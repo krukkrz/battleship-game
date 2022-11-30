@@ -1,26 +1,24 @@
 package source
 
 import (
-	"battleship/pkg/board"
-	"battleship/pkg/ship"
 	"bufio"
 	"os"
 	"strings"
 )
 
-type BoardSource interface {
-	SetupBoard() (*board.Board, error)
+type CoordinatesSource interface {
+	ReadCoordinates() ([][]string, error)
 }
 
-type BoardFromFile struct {
+type CoordinatesFromFile struct {
 	filename string
 }
 
-func New(filename string) *BoardFromFile {
-	return &BoardFromFile{filename}
+func New(filename string) *CoordinatesFromFile {
+	return &CoordinatesFromFile{filename}
 }
 
-func (bs *BoardFromFile) SetupBoard() (*board.Board, error) {
+func (bs *CoordinatesFromFile) ReadCoordinates() ([][]string, error) {
 	f, err := os.Open(bs.filename)
 	if err != nil {
 		return nil, err
@@ -28,11 +26,11 @@ func (bs *BoardFromFile) SetupBoard() (*board.Board, error) {
 	defer f.Close()
 
 	s := bufio.NewScanner(f)
-	var ships []*ship.Ship
+	var shipsCoordinates [][]string
 	for s.Scan() {
 		line := s.Text()
 		coordinates := strings.Split(line, ",")
-		ships = append(ships, ship.New(coordinates...))
+		shipsCoordinates = append(shipsCoordinates, coordinates)
 	}
-	return board.New(ships), nil
+	return shipsCoordinates, nil
 }

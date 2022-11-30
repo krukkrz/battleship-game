@@ -7,15 +7,13 @@ import (
 type Game struct {
 	Board    *board.Board
 	Shots    int
-	Player   string //TODO remove this one
 	Finished bool
 }
 
-func New(player string, b *board.Board) *Game {
+func New(b *board.Board) *Game {
 	return &Game{
 		Board:    b,
 		Shots:    0,
-		Player:   player,
 		Finished: false,
 	}
 }

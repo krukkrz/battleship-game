@@ -9,14 +9,6 @@ type Ship struct {
 	Sunk      bool
 }
 
-// TODO wyjeb
-func Copy(s *Ship) *Ship {
-	return &Ship{
-		Positions: s.Positions,
-		Sunk:      s.Sunk,
-	}
-}
-
 func New(coordinates ...string) *Ship {
 	positions := make(map[string]bool)
 	for _, c := range coordinates {

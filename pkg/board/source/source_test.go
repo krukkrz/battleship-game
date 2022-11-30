@@ -2,44 +2,38 @@ package source_test
 
 import (
 	"battleship/pkg/board/source"
+	"battleship/pkg/common/test"
+	"reflect"
 	"testing"
 )
 
-type shot struct {
-	coordinates   string
-	expectedIsHit bool
-	expectedSunk  bool
-}
-
 func TestBoardFromFile_SetupBoard_reads_from_test_file(t *testing.T) {
 	tt := []struct {
-		name          string
-		filename      string
-		expectedError error
-		shots         []shot
+		name                string
+		filename            string
+		expectingError      bool
+		expectedCoordinates [][]string
 	}{
-		{"happy path", "positions_test.txt", nil, []shot{
-			{"A1", true, false},
-			{"A2", true, false},
-			{"A3", true, false},
-			{"B1", true, false},
-			{"B2", true, true},
-		}},
+		{"happy path", "positions_test.txt", false, test.Coordinates},
+		{"error while reading", "wrong_file.txt", true, nil},
 	}
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
 			s := source.New(tc.filename)
-			b, err := s.SetupBoard()
+			c, err := s.ReadCoordinates()
 
-			if err != tc.expectedError {
-				t.Errorf("expected error: %v, got: %v", tc.expectedError, err)
-			}
+			if !tc.expectingError {
+				if !tc.expectingError && err != nil {
+					t.Errorf("unexpected error: %v", err)
+				}
 
-			for _, s := range tc.shots {
-				isHit, sunk := b.Shoot(s.coordinates)
-				if isHit != s.expectedIsHit || sunk != s.expectedSunk {
+				if reflect.DeepEqual(c, tc.expectedCoordinates) {
 					t.Error("board have other fields than expected")
+				}
+			} else {
+				if err == nil {
+					t.Errorf("expected error, got nil")
 				}
 			}
 		})
