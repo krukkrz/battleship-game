@@ -9,9 +9,9 @@ import (
 var instance *BattleShipGameEngine
 
 type BattleShipGameEngine struct {
-	b       board.Board //TODO think of a better naming
-	games   []*game.Game
-	winners []Winner
+	boardTemplate board.Board
+	games         []*game.Game
+	winners       []Winner
 }
 
 type Winner struct {
@@ -22,46 +22,46 @@ type Winner struct {
 func New(b board.Board) *BattleShipGameEngine {
 	if instance == nil {
 		instance = &BattleShipGameEngine{
-			b:       b,
-			games:   []*game.Game{},
-			winners: []Winner{},
+			boardTemplate: b,
+			games:         []*game.Game{},
+			winners:       []Winner{},
 		}
 	}
 	return instance
 }
 
-func (b *BattleShipGameEngine) Shoot(player, coordinates string) bool {
-	g := b.getGameFor(player)
+func (ge *BattleShipGameEngine) Shoot(player, coordinates string) bool {
+	g := ge.getGameFor(player)
 	isHit, finished := g.Shoot(coordinates)
 	if finished {
-		b.addWinner(g)
+		ge.addWinner(g)
 	}
 	return isHit
 }
 
-func (b *BattleShipGameEngine) TopTen() []Winner {
-	return b.winners[:10]
+func (ge *BattleShipGameEngine) TopTen() []Winner {
+	return ge.winners[:10]
 }
 
-func (b *BattleShipGameEngine) addWinner(g *game.Game) {
+func (ge *BattleShipGameEngine) addWinner(g *game.Game) {
 	w := Winner{g.Player, g.B.Shots}
-	b.winners = append(b.winners, w)
-	sort.SliceStable(b.winners, func(i, j int) bool {
-		return b.winners[i].Shots > b.winners[j].Shots
+	ge.winners = append(ge.winners, w)
+	sort.SliceStable(ge.winners, func(i, j int) bool {
+		return ge.winners[i].Shots > ge.winners[j].Shots
 	})
 }
 
-func (b *BattleShipGameEngine) getGameFor(player string) *game.Game {
+func (ge *BattleShipGameEngine) getGameFor(player string) *game.Game {
 	var g *game.Game
-	for _, cg := range b.games {
+	for _, cg := range ge.games {
 		if cg.Player == player {
 			g = cg
 		}
 	}
 	if g == nil {
-		nb := b.b
+		nb := ge.boardTemplate
 		g = game.New(player, &nb)
-		b.games = append(b.games, g)
+		ge.games = append(ge.games, g)
 	}
 	return g
 }

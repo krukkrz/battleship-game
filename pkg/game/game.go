@@ -4,6 +4,7 @@ import (
 	"battleship/pkg/board"
 )
 
+// TODO remove this object
 type Game struct {
 	B        *board.Board //TODO think of a better naming
 	Player   string
@@ -18,7 +19,6 @@ func New(player string, b *board.Board) *Game {
 	}
 }
 
-// Shoot returns isHit and finished as a result of given shot
 func (g *Game) Shoot(coordinates string) (bool, bool) {
 	isHit, allShipsSunk := g.B.Shoot(coordinates)
 	if allShipsSunk {
