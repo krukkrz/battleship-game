@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// TODO remove this type
 type Ship struct {
 	Positions map[string]bool
 	Sunk      bool

@@ -3,8 +3,8 @@ package board
 import "battleship/pkg/ship"
 
 type Board struct {
-	Shots        int
-	ships        []*ship.Ship
+	Shots        int          //TODO move number of shots to game
+	ships        []*ship.Ship //TODO change this to map[string]ShipType
 	allShipsSunk bool
 }
 
