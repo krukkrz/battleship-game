@@ -3,10 +3,50 @@ package engine
 import (
 	"battleship/pkg/common/test"
 	"battleship/pkg/game"
+	"fmt"
+	"sync"
 	"testing"
 )
 
 //TODO make concurrent tests of using BattleShipGameEngine
+
+func TestBattleShipGameEngine_Shoot_concurrent(t *testing.T) {
+	b := test.BuildBoard()
+	e := New(b)
+	n := 10
+	wg := &sync.WaitGroup{}
+	for i := 0; i < n; i++ {
+		wg.Add(1)
+		player := fmt.Sprintf("player-%d", i)
+		go func(e *BattleShipGameEngine, player string) {
+			defer wg.Done()
+			e.Shoot(player, "A1")
+			e.Shoot(player, "A2")
+			e.Shoot(player, "A3")
+			e.Shoot(player, "B1")
+			e.Shoot(player, "B2")
+
+			g := getGameFor(e.games, player)
+			if g.Shots != 5 {
+				t.Errorf("expected five shots for %s, got: %d", player, g.Shots)
+			}
+		}(e, player)
+	}
+
+	wg.Wait()
+
+	if len(e.games) != n {
+		t.Errorf("expected %d number of games, got: %d", n, len(e.games))
+	}
+
+	if len(e.winners) != n {
+		for _, w := range e.winners {
+			println(w.Name)
+		}
+		t.Errorf("expected %d number of winners, got: %d", n, len(e.winners))
+	}
+	cleanup()
+}
 
 func TestBattleShipGameEngine_New(t *testing.T) {
 	b := test.BuildBoard()
