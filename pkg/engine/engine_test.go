@@ -7,7 +7,6 @@ import (
 )
 
 //TODO make concurrent tests of using BattleShipGameEngine
-// TODO think of if that should be a black box test
 
 func TestBattleShipGameEngine_New(t *testing.T) {
 	b := test.BuildBoard()
@@ -44,13 +43,13 @@ func TestBattleShipGameEngine_Shoot_adds_shot_for_given_player(t *testing.T) {
 	}
 
 	ediGame := getGameFor(e.games, "edi")
-	if ediGame.Board.Shots != 2 {
-		t.Errorf("expected two shots for edi, got: %d", ediGame.Board.Shots)
+	if ediGame.Shots != 2 {
+		t.Errorf("expected two shots for edi, got: %d", ediGame.Shots)
 	}
 
 	markGame := getGameFor(e.games, "mark")
-	if markGame.Board.Shots != 1 {
-		t.Errorf("expected one shot for mark, got: %d", markGame.Board.Shots)
+	if markGame.Shots != 1 {
+		t.Errorf("expected one shot for mark, got: %d", markGame.Shots)
 	}
 
 	cleanup()

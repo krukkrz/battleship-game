@@ -49,9 +49,6 @@ func TestBoard_Shoot(t *testing.T) {
 					t.Errorf("expected expectedAllShipsSunk: %v, got: %v for shot: %s", s.expectedAllShipsSunk, allShipsSunk, s.coordinates)
 				}
 
-				if b.Shots != s.currentNumOfShots {
-					t.Errorf("expected current number of shots: %v, got: %v for shot: %s", s.currentNumOfShots, b.Shots, s.coordinates)
-				}
 			}
 		})
 	}

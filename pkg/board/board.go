@@ -3,21 +3,18 @@ package board
 import "battleship/pkg/ship"
 
 type Board struct {
-	Shots        int          //TODO move number of shots to game
-	ships        []*ship.Ship //TODO change this to map[string]ShipType
+	ships        []*ship.Ship
 	allShipsSunk bool
 }
 
 func New(ships []*ship.Ship) *Board {
 	return &Board{
-		Shots:        0,
 		ships:        ships,
 		allShipsSunk: false,
 	}
 }
 
 func (b *Board) Shoot(cooardinates string) (bool, bool) {
-	b.Shots++
 	isHit := false
 	for _, s := range b.ships {
 		if _, ok := s.Positions[cooardinates]; ok {

@@ -44,7 +44,7 @@ func (ge *BattleShipGameEngine) TopTen() []Winner {
 }
 
 func (ge *BattleShipGameEngine) addWinner(g *game.Game) {
-	w := Winner{g.Player, g.Board.Shots}
+	w := Winner{g.Player, g.Shots}
 	ge.winners = append(ge.winners, w)
 	sort.SliceStable(ge.winners, func(i, j int) bool {
 		return ge.winners[i].Shots > ge.winners[j].Shots
