@@ -52,6 +52,9 @@ func (ge *BattleShipGameEngine) Shoot(player, coordinates string) (bool, bool, e
 func (ge *BattleShipGameEngine) TopTen() []Winner {
 	ge.winMutex.RLock()
 	defer ge.winMutex.RUnlock()
+	if len(ge.winners) < 10 {
+		return ge.winners[:len(ge.winners)]
+	}
 	return ge.winners[:10]
 }
 

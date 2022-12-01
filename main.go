@@ -13,6 +13,7 @@ func main() {
 		log.Fatalf("cannot read coordinates, error: %v", err)
 	}
 	e := engine.New(c)
+
 	s := server.New(":8080", e)
 	s.RegisterRoutes()
 	s.Run()

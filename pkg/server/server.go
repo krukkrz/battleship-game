@@ -19,13 +19,37 @@ func New(port string, e *engine.BattleShipGameEngine) *Server {
 }
 
 func (s *Server) Run() {
-	log.Println("starting server...")
+	log.Printf("started server on port %s \n", s.port)
 	http.ListenAndServe(s.port, s.mux)
 }
 
 func (s *Server) RegisterRoutes() *http.ServeMux {
+	log.Println("registering routes...")
 	s.mux.HandleFunc("/shoot", s.HandleShoot)
+	s.mux.HandleFunc("/top-ten", s.HandleTopTen)
 	return s.mux
+}
+
+func (s *Server) HandleTopTen(w http.ResponseWriter, r *http.Request) {
+	type responseItem struct {
+		Name  string `json:"name"`
+		Shots int    `json:"shots"`
+	}
+
+	winners := s.e.TopTen()
+
+	var winnersResponse []responseItem
+	for _, winner := range winners {
+		winnersResponse = append(winnersResponse, responseItem{winner.Name, winner.Shots})
+	}
+
+	resp, err := json.Marshal(winnersResponse)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(resp))
 }
 
 func (s *Server) HandleShoot(w http.ResponseWriter, r *http.Request) {

@@ -96,7 +96,6 @@ func TestRoute_shoot(t *testing.T) {
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
 			testserver := setupTestServer()
-
 			defer testserver.Close()
 
 			e := httpexpect.New(t, testserver.URL)
@@ -114,8 +113,71 @@ func TestRoute_shoot(t *testing.T) {
 	}
 }
 
+func TestRoute_topTen(t *testing.T) {
+	// given
+	type topTenResponse struct {
+		Name  string `json:"name"`
+		Shots int    `json:"shots"`
+	}
+	rounds := makeWinningRoundsSlice()
+
+	testserver := setupTestServer()
+	defer testserver.Close()
+	e := httpexpect.New(t, testserver.URL)
+
+	for _, r := range rounds {
+		e.POST("/shoot").
+			WithJSON(r.req).
+			Expect().
+			Status(r.status).
+			JSON().
+			Equal(r.exp)
+	}
+
+	// when
+	e.GET("/top-ten").
+		Expect().
+		Status(http.StatusOK).
+		JSON().
+		Array().
+		Contains(topTenResponse{
+			Name:  "merry",
+			Shots: 5,
+		})
+}
+
 func setupTestServer() *httptest.Server {
 	eng := engine.New(test.Coordinates)
 	srv := server.New("", eng)
 	return httptest.NewServer(srv.RegisterRoutes())
+}
+
+func makeWinningRoundsSlice() []round {
+	return []round{
+		{
+			request{"merry", "A1"},
+			response{true, false},
+			http.StatusOK,
+		},
+		{
+			request{"merry", "A2"},
+			response{true, false},
+			http.StatusOK,
+		},
+		{
+			request{"merry", "A3"},
+			response{true, false},
+			http.StatusOK,
+		},
+		{
+			request{"merry", "B1"},
+			response{true, false},
+			http.StatusOK,
+		},
+		{
+			request{"merry", "B2"},
+			response{true, true},
+			http.StatusOK,
+		},
+	}
 }

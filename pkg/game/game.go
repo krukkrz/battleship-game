@@ -24,5 +24,6 @@ func (g *Game) Shoot(coordinates string) (bool, bool) {
 	if allShipsSunk {
 		g.Finished = true
 	}
+	// TODO it should also return if a ship did sunk
 	return isHit, g.Finished
 }
