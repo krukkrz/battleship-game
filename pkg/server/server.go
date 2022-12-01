@@ -48,7 +48,8 @@ func (s *Server) HandleShoot(w http.ResponseWriter, r *http.Request) {
 
 	isHit, isFinished, err := s.e.Shoot(req.Player, req.Coordinates)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	resp, err := json.Marshal(response{isHit, isFinished})

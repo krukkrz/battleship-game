@@ -8,9 +8,6 @@ import (
 )
 
 func main() {
-	// TODO start a web serwer and run games
-	// TODO read positions from txt file
-
 	c, err := source.New("positions.txt").ReadCoordinates()
 	if err != nil {
 		log.Fatalf("cannot read coordinates, error: %v", err)
